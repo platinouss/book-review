@@ -27,6 +27,6 @@ class MyCrawlerTest {
         MyCrawler myCrawler = new MyCrawler();
         String category = myCrawler.categoryCrawler(result.getItems().get(0).getLink());
 
-        assertEquals(category, "컴퓨터공학");
+        assertEquals(category, "컴퓨터/IT");
     }
 }
