@@ -24,7 +24,7 @@ public class NaverClient {
     @Value("${naver.url.search.book}")
     private String naverBookUrl;
 
-    public SearchBookRes localSearch(SearchBookReq searchBookReq) {
+    public SearchBookRes bookSearch(SearchBookReq searchBookReq) {
         URI uri = UriComponentsBuilder.fromUriString(naverBookUrl)
                 .queryParams(searchBookReq.toMuiltiValueMap())
                 .build()

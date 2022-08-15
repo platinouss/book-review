@@ -21,7 +21,7 @@ public class ClientTest {
         var search = new SearchBookReq();
         search.setQuery("JPA");
 
-        SearchBookRes result = naverClient.localSearch(search);
+        SearchBookRes result = naverClient.bookSearch(search);
 
         System.out.println(result);
     }

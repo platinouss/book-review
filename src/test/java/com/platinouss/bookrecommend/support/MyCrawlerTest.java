@@ -22,7 +22,7 @@ class MyCrawlerTest {
         SearchBookReq search = new SearchBookReq();
         search.setQuery("운영체제");
 
-        SearchBookRes result = naverClient.localSearch(search);
+        SearchBookRes result = naverClient.bookSearch(search);
 
         MyCrawler myCrawler = new MyCrawler();
         String category = myCrawler.categoryCrawler(result.getItems().get(0).getLink());
