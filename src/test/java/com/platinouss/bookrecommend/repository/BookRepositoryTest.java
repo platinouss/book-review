@@ -35,7 +35,7 @@ class BookRepositoryTest {
     @Test
     void crudTest() {
         Book book = new Book();
-        book.setName("Spring Data JPA");
+        book.setName("잘될 수밖에 없는 너에게");
 
         bookRepository.save(book);
 
@@ -44,16 +44,16 @@ class BookRepositoryTest {
 
     @Test
     void setPublisherTest() {
-        Publisher publisher = publisherRepository.findByName("스프링 컴퍼니");
+        Publisher publisher = publisherRepository.findByName("북로망스");
 
         Book book = new Book();
 
-        book.setName("Spring Data JPA");
-        book.setCategory("IT");
+        book.setName("잘될 수밖에 없는 너에게");
+        book.setCategory("에세이");
         book.setPublisher(publisher);
 
         bookRepository.save(book);
-        Book book1 = bookRepository.findByName("Spring Data JPA");
+        Book book1 = bookRepository.findByName("잘될 수밖에 없는 너에게");
         System.out.println(">> 출판사 : " + book1.getPublisher().getName());
     }
 
@@ -61,7 +61,7 @@ class BookRepositoryTest {
     void setReviewTest() {
         setPublisherTest();
 
-        Book book = bookRepository.findByName("Spring Data JPA");
+        Book book = bookRepository.findByName("잘될 수밖에 없는 너에게");
 
         Review review = new Review();
         review.setTitle("깊이 있는 학습을 할 수 있는 책");
@@ -71,7 +71,7 @@ class BookRepositoryTest {
 
         reviewRepository.save(review);
 
-        List<Review> reviews = reviewRepository.findByBookName("Spring Data JPA");
+        List<Review> reviews = reviewRepository.findByBookName("잘될 수밖에 없는 너에게");
         System.out.println(reviews);
     }
 
@@ -79,7 +79,7 @@ class BookRepositoryTest {
     void setAuthorTest() {
         setReviewTest();
 
-        Book book = bookRepository.findByName("Spring Data JPA");
+        Book book = bookRepository.findByName("잘될 수밖에 없는 너에게");
 
         Author author = new Author();
         author.setName("platinouss");

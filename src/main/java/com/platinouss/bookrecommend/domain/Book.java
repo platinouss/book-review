@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Builder
 public class Book extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,15 @@ public class Book extends BaseEntity {
 
     private String category;
 
-    @OneToMany(mappedBy = "book")
+    private String imageLink;
+
+    private long isbn;
+
+    private String pubdate;
+
+    private String description;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
 

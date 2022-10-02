@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
     Book findByName(String name);
+    Book findById(long id);
 }

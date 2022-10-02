@@ -17,7 +17,7 @@ public class SearchBookReq {
     private String sort = "sim";
 
     public MultiValueMap<String, String> toMuiltiValueMap() {
-        var map = new LinkedMultiValueMap<String, String>();
+        LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 
         map.add("query", query);
         map.add("display", String.valueOf(display));
