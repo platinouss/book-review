@@ -1,5 +1,6 @@
 package com.platinouss.bookrecommend.domain;
 
+import com.platinouss.bookrecommend.domain.enums.Gender;
 import lombok.*;
 
 import javax.persistence.*;

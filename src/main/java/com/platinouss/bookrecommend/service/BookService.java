@@ -4,6 +4,7 @@ import com.platinouss.bookrecommend.domain.Book;
 import com.platinouss.bookrecommend.dto.BookDto;
 import com.platinouss.bookrecommend.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BookService {
-
     private final BookRepository bookRepository;
 
     public Book save(BookDto bookDto) {
