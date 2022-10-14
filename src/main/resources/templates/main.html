@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test 페이지</title>
+</head>
+<body>
+<h2 th:text="'안녕하세요! ' + ${username} + '님'"></h2>
+<p><a href="/logout">logout</a></p>
+
+<h2>현재 준비된 책</h2>
+<table>
+    <thead>
+    <tr>
+        <th> 이름 </th>
+        <th> 카테고리 </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${books.empty}">
+        <td colspan="2"> 현재 미입고 상태입니다. </td>
+    </tr>
+    <tr th:each="book : ${books}">
+        <td><span th:text="${book.name}"> 이름 </span></td>
+        <td><span th:text="${book.category}"> 카테고리 </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
