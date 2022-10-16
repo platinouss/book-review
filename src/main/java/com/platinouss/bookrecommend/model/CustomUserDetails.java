@@ -1,21 +1,22 @@
 package com.platinouss.bookrecommend.model;
 
 import com.platinouss.bookrecommend.domain.User;
+import com.platinouss.bookrecommend.repository.AuthorityRepository;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Data
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private final User user;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
+    private final User user;
+    private final AuthorityRepository authorityRepository;
 
     public final User getUser() {
         return user;
@@ -23,9 +24,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities().stream()
-                .map(a -> new SimpleGrantedAuthority(a.getName()))
-                .collect(Collectors.toList());
+        return authorityRepository.findAuthorityByUser(user);
     }
 
     @Override

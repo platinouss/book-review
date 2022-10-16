@@ -26,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/main", true);
 
         http.authorizeRequests()
-                .anyRequest().authenticated();
+                .mvcMatchers("user/add").permitAll()
+                .mvcMatchers("book/add").hasRole("ADMIN")
+                .mvcMatchers("/main").hasRole("MANAGER")
+                .anyRequest().permitAll();
     }
 }
