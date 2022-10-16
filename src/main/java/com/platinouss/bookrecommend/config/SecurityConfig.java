@@ -23,12 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.formLogin()
-                .defaultSuccessUrl("/main", true);
+                .defaultSuccessUrl("/", true);
 
         http.authorizeRequests()
                 .mvcMatchers("user/add").permitAll()
-                .mvcMatchers("book/add").hasRole("ADMIN")
-                .mvcMatchers("/main").hasRole("MANAGER")
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
     }
 }
