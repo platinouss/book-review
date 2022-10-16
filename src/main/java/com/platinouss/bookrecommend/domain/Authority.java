@@ -22,4 +22,9 @@ public class Authority implements GrantedAuthority {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @Override
+    public String toString() {
+        return authority;
+    }
 }

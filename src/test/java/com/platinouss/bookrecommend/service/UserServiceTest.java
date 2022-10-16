@@ -33,9 +33,8 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("1. 사용자 추가")
+    @DisplayName("1. 사용자 추가 후 MANAGER 권환 확인")
     void test1() {
-
          User user = User.builder()
                  .name("platinouss")
                  .password("1234")
@@ -45,11 +44,12 @@ public class UserServiceTest {
 
         userService.addUser(user);
 
-        String email = "";
-        if(userRepository.findUserByName(user.getName()).isPresent()) {
-            email = userRepository.findUserByName(user.getName()).get().getEmail();
-        }
+        userRepository.findUserByName(user.getName()).ifPresent(
+                u -> assertEquals("platinouss@gmail.com", u.getEmail())
+        );
 
-        assertEquals("platinouss@gmail.com", email);
+        userRepository.findUserByName(user.getName()).ifPresent(
+                u -> assertEquals("ROLE_MANAGER", u.getAuthorities().get(0).toString())
+        );
     }
 }
