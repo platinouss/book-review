@@ -1,5 +1,6 @@
 package com.platinouss.bookrecommend.domain;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Authority implements GrantedAuthority {
+public class Authority extends BaseEntity implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

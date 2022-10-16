@@ -20,5 +20,6 @@ public class BookReviewInfo extends BaseEntity {
     private int reviewCount;
 
     @OneToOne(mappedBy = "bookReviewInfo")
+    @ToString.Exclude
     private Book book;
 }

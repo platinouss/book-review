@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,5 +21,6 @@ public class Publisher extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "publisher")
+    @ToString.Exclude
     private List<Book> books = new ArrayList<>();
 }

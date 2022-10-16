@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,5 +21,6 @@ public class Author extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "author")
+    @ToString.Exclude
     private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
 }

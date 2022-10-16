@@ -24,9 +24,11 @@ public class Review extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "BOOK_ID")
+    @ToString.Exclude
     private Book book;
 }
