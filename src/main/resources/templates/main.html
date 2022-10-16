@@ -8,12 +8,14 @@
 <h2 th:text="'안녕하세요! ' + ${username} + '님'"></h2>
 <p><a href="/logout">logout</a></p>
 
-<h2>현재 준비된 책</h2>
+<h2>현재 추가된 책</h2>
 <table>
     <thead>
     <tr>
         <th> 이름 </th>
         <th> 카테고리 </th>
+        <th> 작가 </th>
+        <th> 출판사 </th>
     </tr>
     </thead>
     <tbody>
@@ -23,6 +25,30 @@
     <tr th:each="book : ${books}">
         <td><span th:text="${book.name}"> 이름 </span></td>
         <td><span th:text="${book.category}"> 카테고리 </span></td>
+        <td><span th:text="${book.bookAndAuthors.get(0).author.name}"> 작가 </span></td>
+        <td><span th:text="${book.publisher.name}"> 출판사 </span></td>
+        <td><a th:href="@{/book/{book_id}(book_id = ${book.id})}">상세 페이지</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<h2>현재 작성된 리뷰</h2>
+<table>
+    <thead>
+    <tr>
+        <th> 제목 </th>
+        <th> 내용 </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${reviews.empty}">
+        <td colspan="2"> 작성된 리뷰가 없습니다. </td>
+    </tr>
+    <tr th:each="review : ${reviews}">
+        <td><span th:text="${review.name}"> 제목 </span></td>
+        <td><span th:text="${review.category}"> 내용 </span></td>
     </tr>
     </tbody>
 </table>

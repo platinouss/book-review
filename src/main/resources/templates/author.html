@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Author 페이지</title>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <td> 이름 : </td>
+        <td><span th:text="${author.get().name}"> 이름 </span></td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="bookAndAuthor : ${author.get().bookAndAuthors}">
+        <td> 출판한 책 : </td>
+        <td><span th:text="${bookAndAuthor.book.name}"> 출판한 책 </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

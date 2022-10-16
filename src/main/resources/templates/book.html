@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Book 페이지</title>
+</head>
+<body>
+
+<table th:if="${book.isPresent()}">
+    <thead>
+    <tr>
+        <td> 이름 : </td>
+        <td><span th:text="${book.get().name}"> 이름 </span></td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="bookAndAuthor : ${book.get().bookAndAuthors}">
+        <td> 작가 : </td>
+        <td><a th:href="@{/author/{author_id}(author_id = ${bookAndAuthor.author.id})}" th:text="${bookAndAuthor.author.name}"> 이름 </a></td>
+    </tr>
+    </tbody>
+
+    <tbody>
+    <tr>
+        <td> 카테고리 : </td>
+        <td><span th:text="${book.get().category}"> 카테고리 </span></td>
+    </tr>
+    </tbody>
+
+    <tbody>
+    <tr>
+        <td> 설명 : </td>
+        <td><span th:text="${book.get().description}"> 설명 </span></td>
+    </tr>
+    </tbody>
+
+</table>
+</body>
+</html>
