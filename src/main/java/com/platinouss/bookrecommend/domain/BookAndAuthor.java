@@ -17,10 +17,10 @@ public class BookAndAuthor extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "BOOK_ID")
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "AUTHOR_ID")
     private Author author;
 }

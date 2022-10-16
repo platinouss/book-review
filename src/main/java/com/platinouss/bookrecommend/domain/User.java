@@ -3,12 +3,16 @@ package com.platinouss.bookrecommend.domain;
 import com.platinouss.bookrecommend.domain.enums.Gender;
 import com.platinouss.bookrecommend.domain.listener.UserEntityListener;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +37,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserHistory> userHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Authority> authorities;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Authority> authorities = new ArrayList<>();
 }

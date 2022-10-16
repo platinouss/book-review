@@ -1,26 +1,25 @@
 package com.platinouss.bookrecommend.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Authority {
+public class Authority implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String authority;
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID")
     private User user;
 }

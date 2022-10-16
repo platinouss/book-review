@@ -35,7 +35,7 @@ public class Book extends BaseEntity {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToOne
-    @JoinColumn(name = "book_review_info_id")
+    @JoinColumn(name = "BOOK_REVIEW_INFO_ID")
     @ToString.Exclude
     private BookReviewInfo bookReviewInfo;
 
@@ -44,7 +44,7 @@ public class Book extends BaseEntity {
     private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "publisher_id")
+    @JoinColumn(name = "PUBLISHER_ID")
     @ToString.Exclude
     private Publisher publisher;
 }
