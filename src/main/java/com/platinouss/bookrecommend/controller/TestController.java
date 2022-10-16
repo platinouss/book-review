@@ -33,7 +33,7 @@ public class TestController {
     }
 
     @PostMapping("/book/add")
-    public Book addBook(@RequestBody BookDto book) {
-        return bookService.save(book);
+    public void addBook(@RequestBody BookDto book) {
+        bookService.add(book);
     }
 }
