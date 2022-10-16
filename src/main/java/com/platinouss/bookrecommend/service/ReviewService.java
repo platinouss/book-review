@@ -21,21 +21,7 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public List<Review> getAll(long id) {
-        return reviewRepository.findByBookId(id);
-    }
-
     public Review insert(Review review) {
-        return reviewRepository.save(review);
-    }
-
-    public Review insert(long id, String title, String content, float score) {
-        Book book = bookRepository.findById(id);
-
-        Review review = Review.builder()
-                .title(title).content(content).score(score).book(book)
-                .build();
-
         return reviewRepository.save(review);
     }
 }
