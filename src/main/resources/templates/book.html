@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Test Book 페이지</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css">
+    <link rel="stylesheet" href="css/table.css">
 </head>
 <body>
 
-<table th:if="${book.isPresent()}">
-    <thead>
-    <tr>
-        <td> 이름 : </td>
-        <td><span th:text="${book.get().name}"> 이름 </span></td>
-    </tr>
-    </thead>
+<h2> 책 상세소개 </h2>
 
-    <tbody>
-    <tr th:each="bookAndAuthor : ${book.get().bookAndAuthors}">
-        <td> 작가 : </td>
-        <td><a th:href="@{/author/{author_id}(author_id = ${bookAndAuthor.author.id})}" th:text="${bookAndAuthor.author.name}"> 이름 </a></td>
-    </tr>
-    </tbody>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-hover dt-responsive">
+            <thead>
+            <tr>
+                <th class="th-1"> 이름 </th>
+                <th class="th-2"> 작가 </th>
+                <th class="th-2"> 카테고리 </th>
+                <th class="th-3"> 설명 </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bookAndAuthor : ${book.bookAndAuthors}">
+                <td><span th:text="${book.name}"> 책 이름 </span></td>
+                <td><a th:href="@{/author/{author_id}(author_id = ${bookAndAuthor.author.id})}" th:text="${bookAndAuthor.author.name}"> 이름 </a></td>
+                <td><span th:text="${book.category}"> 카테고리 </span></td>
+                <td><span th:text="${book.description}"> 설명 </span></td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-    <tbody>
-    <tr>
-        <td> 카테고리 : </td>
-        <td><span th:text="${book.get().category}"> 카테고리 </span></td>
-    </tr>
-    </tbody>
+<div sec:authorize="isAuthenticated()">
+    <p><a th:href="@{/review/{book_id}(book_id=${book.id})}"> 리뷰 작성하기 </a></p>
+</div>
 
-    <tbody>
-    <tr>
-        <td> 설명 : </td>
-        <td><span th:text="${book.get().description}"> 설명 </span></td>
-    </tr>
-    </tbody>
-
-</table>
 </body>
 </html>

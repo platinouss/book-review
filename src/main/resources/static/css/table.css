@@ -1,0 +1,20 @@
+body {
+    font-size: 140%;
+}
+
+h2 {
+    text-align: center;
+    padding: 20px 0;
+}
+.th-1 {
+    width: 100px;
+}
+
+.th-3 {
+    width: 100px;
+}
+
+.p {
+    text-align: center;
+    font-size: 15px;
+}

@@ -36,4 +36,11 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public boolean exists(String username) {
+        return userRepository.findUserByName(username).isPresent();
+    }
+    public User find(String username) {
+        return userRepository.findUserByName(username).orElseThrow(RuntimeException::new);
+    }
 }

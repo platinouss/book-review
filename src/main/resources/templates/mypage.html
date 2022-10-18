@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test 페이지</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css">
+    <link rel="stylesheet" href="css/table.css">
+</head>
+<body>
+
+<h2 th:text="'안녕하세요! ' + ${username} + '님'"/>
+<p class="p"><a href="/logout">logout</a></p>
+
+<br>
+
+<h2>현재 추가된 책</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-hover dt-responsive">
+            <thead>
+            <tr>
+                <th> 이름 </th>
+                <th> 카테고리 </th>
+                <th> 작가 </th>
+                <th> 출판사 </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${books.empty}">
+                <td colspan="2"> 현재 미입고 상태입니다. </td>
+            </tr>
+            <tr th:each="book : ${books}">
+                <td><span th:text="${book.name}"> 이름 </span></td>
+                <td><span th:text="${book.category}"> 카테고리 </span></td>
+                <td><span th:text="${book.bookAndAuthors.get(0).author.name}"> 작가 </span></td>
+                <td><span th:text="${book.publisher.name}"> 출판사 </span></td>
+                <td><a th:href="@{/book/{book_id}(book_id = ${book.id})}">상세 페이지</a></td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<h2>현재 작성된 리뷰</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-hover dt-responsive">
+        <thead>
+            <tr>
+                <th> 책 </th>
+                <th> 제목 </th>
+                <th> 내용 </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${reviews.empty}">
+                <td colspan="2"> 작성된 리뷰가 없습니다. </td>
+            </tr>
+            <tr th:each="review : ${reviews}">
+                <td><span th:text="${review.book.name}"> 책 </span></td>
+                <td><span th:text="${review.title}"> 제목 </span></td>
+                <td><span th:text="${review.content}"> 내용 </span></td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
