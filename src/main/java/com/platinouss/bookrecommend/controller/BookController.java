@@ -16,8 +16,8 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/{book_id}")
-    public String detail(@PathVariable String book_id, Model m) {
-        m.addAttribute("book", bookService.find(Long.parseLong(book_id)));
+    public String detail(@PathVariable Long book_id, Model m) {
+        m.addAttribute("book", bookService.find(book_id));
 
         return "book.html";
     }

@@ -16,8 +16,8 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/{author_id}")
-    public String detail(@PathVariable String author_id, Model m) {
-        m.addAttribute("author", authorService.find(Long.parseLong(author_id)));
+    public String detail(@PathVariable Long author_id, Model m) {
+        m.addAttribute("author", authorService.find(author_id));
 
         return "author.html";
     }

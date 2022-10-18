@@ -26,7 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/", true);
 
         http.authorizeRequests()
-                .mvcMatchers("user/add").permitAll()
+                .mvcMatchers("/").permitAll()
+                .mvcMatchers("/login").permitAll()
+                .mvcMatchers("/register").permitAll()
                 .anyRequest().authenticated();
     }
 }

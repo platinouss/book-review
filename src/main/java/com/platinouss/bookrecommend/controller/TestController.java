@@ -27,11 +27,6 @@ public class TestController {
         return "add user success";
     }
 
-    @PostMapping("/review/add")
-    public Review addReview(@RequestBody Review review) {
-        return reviewService.insert(review);
-    }
-
     @PostMapping("/book/add")
     public void addBook(@RequestBody BookDto book) {
         bookService.add(book);

@@ -55,8 +55,8 @@ public class BookService {
         return bookRepository.findByName(name);
     }
 
-    public Optional<Book> find(Long id) {
-        return bookRepository.findById(id);
+    public Book find(Long id) {
+        return bookRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     public List<Book> getAll() {
