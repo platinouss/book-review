@@ -2,13 +2,37 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Test Register 페이지</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
 </head>
-<body>
-<h2> Register </h2>
+<body class="container">
+<h1 class="py-5"> 회원 가입 </h1>
 
-<p><a href="/login">login</a></p>
-<p><a href="/register">register</a></p>
-<p><a href="/logout">logout</a></p>
+<form method="post" th:action="@{/register}" th:object="${user}" class="col card p-3 mb-5">
+    <div class="form-group">
+        <label for="email"> 이메일 </label>
+        <input id="email" placeholder="Email" required type="text" th:field="*{email}" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="password"> 비밀번호 </label>
+        <input id="password" placeholder="Password" required type="password" th:field="*{password}" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="name"> 이름 </label>
+        <input id="name" placeholder="Name" required type="text" th:field="*{name}" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="gender"> 성별 </label>
+        <select id="gender" required th:field="*{gender}" class="form-control ">
+            <option value="" hidden>성별을 선택해주세요</option>
+            <option value="MALE"> MALE </option>
+            <option value="FEMALE"> FEMALE </option>
+        </select>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Write">
+</form>
+
 </body>
 </html>

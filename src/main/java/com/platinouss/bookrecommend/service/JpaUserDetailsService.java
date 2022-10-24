@@ -19,11 +19,11 @@ public class JpaUserDetailsService implements UserDetailsService {
     private final AuthorityRepository authorityRepository;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Supplier<UsernameNotFoundException> supplier = () ->
                 new UsernameNotFoundException("인증 실패");
 
-        User user = userRepository.findUserByName(username)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(supplier);
 
         return new CustomUserDetails(user, authorityRepository);

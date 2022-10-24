@@ -2,7 +2,6 @@ package com.platinouss.bookrecommend.config;
 
 import com.platinouss.bookrecommend.service.AuthenticationProviderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,11 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.formLogin()
                 .defaultSuccessUrl("/", true);
-
+        http.logout()
+                .logoutSuccessUrl("/");
         http.authorizeRequests()
-                .mvcMatchers("/").permitAll()
-                .mvcMatchers("/login").permitAll()
-                .mvcMatchers("/register").permitAll()
+                .mvcMatchers("/", "/login", "/register", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
