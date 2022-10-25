@@ -37,10 +37,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean exists(String username) {
-        return userRepository.findUserByName(username).isPresent();
+    public boolean exists(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
     }
-    public User find(String username) {
-        return userRepository.findUserByName(username).orElseThrow(RuntimeException::new);
+
+    public User find(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(RuntimeException::new);
     }
+
+    public String getUserName(String email) {
+        return userRepository.findUserByEmail(email).orElse(new User()).getName();
+    }
+
 }
