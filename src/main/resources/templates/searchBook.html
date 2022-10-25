@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Book Search Test 페이지</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+</head>
+<body class="container">
+<h1 class="py-5"> 도서 검색 </h1>
+
+<form th:action="@{/book/search}" method="get" class="col card p-3 mb-5">
+    <div class="form-group">
+        <label for="name"> 도서 이름 </label>
+        <input id="name" type="text" name="name" class="form-control"/>
+    </div>
+    <input type="submit" class="btn btn-primary" value="검색">
+</form>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-hover dt-responsive">
+                <thead>
+                <tr>
+                    <th> 이름 </th>
+                    <th> 카테고리 </th>
+                    <th> 작가 </th>
+                    <th> 출판사 </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${book}">
+                    <td><span th:text="${book.name}"> 이름 </span></td>
+                    <td><span th:text="${book.category}"> 카테고리 </span></td>
+                    <td><span th:text="${book.bookAndAuthors.get(0).author.name}"> 작가 </span></td>
+                    <td><span th:text="${book.publisher.name}"> 출판사 </span></td>
+                    <td><a th:href="@{/book/{book_id}(book_id=${book.id})}"> 상세페이지 </a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

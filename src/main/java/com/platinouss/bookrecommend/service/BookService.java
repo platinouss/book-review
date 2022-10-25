@@ -29,8 +29,10 @@ public class BookService {
     private final AuthorService authorService;
     private final BookAndAuthorService bookAndAuthorService;
 
-    public void add(BookDto bookDto) {
-        if(bookRepository.findBookByIsbn(bookDto.getIsbn()).isPresent()) { return; }
+    public Book add(BookDto bookDto) {
+        if(bookRepository.findBookByIsbn(bookDto.getIsbn()).isPresent()) {
+            return bookRepository.findBookByIsbn(bookDto.getIsbn()).get();
+        }
 
         Book book = Book.builder()
                 .name(bookDto.getTitle()).category(bookDto.getCategory()).imageLink(bookDto.getImage())
@@ -48,7 +50,7 @@ public class BookService {
 
         book.setPublisher(publisher);
         book.getBookAndAuthors().add(bookAndAuthor);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     public Optional<Book> find(String name) {
