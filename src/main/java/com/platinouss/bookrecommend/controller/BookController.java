@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,9 +24,11 @@ public class BookController {
     public String search(@RequestParam(value = "name", required = false) Optional<String> name, Model m) {
         if(name.isPresent()) {
             try {
-                BookDto bookDto = searchBookService.search(name.get());
-                Book book = bookService.add(bookDto);
-                m.addAttribute("book", book);
+                List<Book> books = new ArrayList<>();
+                for(BookDto book : searchBookService.search(name.get())) {
+                    books.add(bookService.add(book));
+                }
+                m.addAttribute("books", books);
             } catch(Exception e) {
                 m.addAttribute("error", "name_error");
             }

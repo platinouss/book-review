@@ -12,7 +12,7 @@ import org.springframework.util.MultiValueMap;
 public class SearchBookReq {
 
     private String query = "";
-    private int display = 1;
+    private int display = 10;
     private int start = 1;
     private String sort = "sim";
 

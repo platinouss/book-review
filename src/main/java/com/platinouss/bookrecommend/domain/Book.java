@@ -28,7 +28,7 @@ public class Book extends BaseEntity {
 
     private String pubdate;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)

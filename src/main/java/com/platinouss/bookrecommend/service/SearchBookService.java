@@ -10,37 +10,43 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SearchBookService {
     private final NaverClient naverClient;
 
-    public BookDto search(String query) throws IOException {
+    public List<BookDto> search(String query) throws IOException {
         SearchBookReq searchBookReq = new SearchBookReq();
-        searchBookReq.setQuery(query);
+        List<BookDto> books = new ArrayList<>();
+        try {
+            searchBookReq.setQuery(query);
+            SearchBookRes searchBookRes = naverClient.bookSearch(searchBookReq);
 
-        SearchBookRes searchBookRes = naverClient.bookSearch(searchBookReq);
+            if(searchBookRes.getTotal() > 0) {
+                MyCrawler myCrawler = new MyCrawler();
 
-        BookDto result = new BookDto();
-        if(searchBookRes.getTotal() > 0) {
-            MyCrawler myCrawler = new MyCrawler();
-            SearchBookRes.SearchBookItem bookItem = searchBookRes.getItems().get(0);
+                for (SearchBookRes.SearchBookItem bookItem : searchBookRes.getItems()) {
+                    BookDto book = BookDto.builder()
+                            .title(bookItem.getTitle())
+                            .category(myCrawler.categoryCrawler(bookItem.getLink()))
+                            .author(bookItem.getAuthor())
+                            .publisher(bookItem.getPublisher())
+                            .image(bookItem.getImage())
+                            .isbn(bookItem.getIsbn())
+                            .description(bookItem.getDescription())
+                            .pubdate(bookItem.getPubdate())
+                            .link(bookItem.getLink())
+                            .discount(bookItem.getDiscount())
+                            .build();
 
-            result.setTitle(bookItem.getTitle());
-            result.setCategory(myCrawler.categoryCrawler(bookItem.getLink()));
-            result.setAuthor(bookItem.getAuthor());
-            result.setPublisher(bookItem.getPublisher());
-            result.setImage(bookItem.getImage());
-            result.setIsbn(bookItem.getIsbn());
-            result.setDescription(bookItem.getDescription());
-            result.setPubdate(bookItem.getPubdate());
-            result.setLink(bookItem.getLink());
-            result.setDiscount(bookItem.getDiscount());
+                    books.add(book);
+                }
+            }
+        } catch(Exception ignored) {}
 
-            return result;
-        }
-
-        return new BookDto();
+        return books;
     }
 }

@@ -31,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="book : ${book}">
+                <tr th:each="book : ${books}">
                     <td><span th:text="${book.name}"> 이름 </span></td>
                     <td><span th:text="${book.category}"> 카테고리 </span></td>
                     <td><span th:text="${book.bookAndAuthors.get(0).author.name}"> 작가 </span></td>
