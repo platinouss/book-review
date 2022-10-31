@@ -13,7 +13,7 @@ public class RegisterController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public String register(@RequestBody User user) {
         System.out.println(user.getName() + "==");
         if(!userService.exists(user.getName())) {
