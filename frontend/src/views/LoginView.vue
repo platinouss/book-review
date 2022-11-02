@@ -24,6 +24,8 @@ export default {
   name: 'LoginView',
   data () {
     return {
+      loginSuccess: false,
+      loginError: false,
       loginForm: {
         email: '',
         password: ''
@@ -31,21 +33,22 @@ export default {
     }
   },
   methods: {
-    login () {
-      axios
-        .post('/api/login', this.loginForm)
-        .then((response) => {
-          if (response.status === 200) {
-            localStorage.setItem('jwt', response.data)
-            console.log(response.data)
-            alert('로그인 성공')
-            this.$router.push('/')
-          }
+    async login () {
+      try {
+        const result = await axios.post('/api/login', {
+          email: this.loginForm.email,
+          password: this.loginForm.password
         })
-        .catch(function (error) {
-          console.log(error)
-          alert('로그인 실패')
-        })
+        if (result.status === 200) {
+          this.$store.commit('loginSuccess')
+          alert('로그인 성공')
+          this.$router.push('/')
+        }
+      } catch (error) {
+        this.loginError = true
+        alert('로그인 실패')
+        throw new Error(error)
+      }
     }
   }
 }

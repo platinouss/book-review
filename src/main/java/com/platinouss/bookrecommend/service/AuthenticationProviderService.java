@@ -26,7 +26,7 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         CustomUserDetails user = userDetailsService.loadUserByUsername(email);
 
-        return checkPassword(user, password, bCryptPasswordEncoder);
+        return checkPassword(user, password);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    private Authentication checkPassword(CustomUserDetails user, String rawPassword, PasswordEncoder encoder) {
-        if(encoder.matches(rawPassword, user.getPassword())) {
+    private Authentication checkPassword(CustomUserDetails user, String rawPassword) {
+        if(bCryptPasswordEncoder.matches(rawPassword, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     user.getUsername(),
                     user.getPassword(),

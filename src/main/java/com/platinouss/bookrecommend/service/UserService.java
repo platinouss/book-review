@@ -6,13 +6,12 @@ import com.platinouss.bookrecommend.domain.User;
 import com.platinouss.bookrecommend.repository.AuthorityRepository;
 import com.platinouss.bookrecommend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -39,6 +38,17 @@ public class UserService {
 
     public boolean exists(String email) {
         return userRepository.findUserByEmail(email).isPresent();
+    }
+    public void auth(User user) {
+        Optional<User> oUser = userRepository.findUserByEmail(user.getEmail());
+        if (oUser.isPresent()) {
+            User u = oUser.get();
+            if(!bCryptPasswordEncoder.matches(user.getPassword(), u.getPassword())) {
+                throw new BadCredentialsException("아이디와 패스워드를 확인하세요");
+            }
+        } else {
+            throw new BadCredentialsException("아이디와 패스워드를 확인하세요");
+        }
     }
 
     public User find(String email) {
