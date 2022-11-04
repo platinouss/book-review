@@ -6,16 +6,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@Builder
 public class Book extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
     private Long id;
 
     private String name;
@@ -31,21 +31,17 @@ public class Book extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
-    @ToString.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "BOOK_REVIEW_INFO_ID")
-    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bood_review_info_id")
     private BookReviewInfo bookReviewInfo;
 
-    @OneToMany(mappedBy = "book")
-    @ToString.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "PUBLISHER_ID")
-    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 }

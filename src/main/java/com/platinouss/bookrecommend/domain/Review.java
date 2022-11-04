@@ -4,16 +4,16 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Builder
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@Builder
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_name")
     private Long id;
 
     private String title;
@@ -22,13 +22,11 @@ public class Review extends BaseEntity {
 
     private float score;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "BOOK_ID")
-    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
     private Book book;
 }
