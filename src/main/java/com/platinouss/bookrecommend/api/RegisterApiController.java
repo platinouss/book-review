@@ -1,4 +1,4 @@
-package com.platinouss.bookrecommend.controller;
+package com.platinouss.bookrecommend.api;
 
 import com.platinouss.bookrecommend.domain.User;
 import com.platinouss.bookrecommend.service.UserService;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RegisterController {
+public class RegisterApiController {
 
     private final UserService userService;
 
