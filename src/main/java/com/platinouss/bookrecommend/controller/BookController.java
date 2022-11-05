@@ -1,7 +1,7 @@
 package com.platinouss.bookrecommend.controller;
 
 import com.platinouss.bookrecommend.domain.Book;
-import com.platinouss.bookrecommend.dto.BookDto;
+import com.platinouss.bookrecommend.naver.dto.NaverBookDto;
 import com.platinouss.bookrecommend.service.BookService;
 import com.platinouss.bookrecommend.service.SearchBookService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class BookController {
         if(name.isPresent()) {
             try {
                 List<Book> books = new ArrayList<>();
-                for(BookDto book : searchBookService.search(name.get())) {
+                for(NaverBookDto book : searchBookService.search(name.get())) {
                     books.add(bookService.add(book));
                 }
                 m.addAttribute("books", books);

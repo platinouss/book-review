@@ -1,7 +1,6 @@
 package com.platinouss.bookrecommend.service;
 
-import com.platinouss.bookrecommend.domain.Book;
-import com.platinouss.bookrecommend.dto.BookDto;
+import com.platinouss.bookrecommend.naver.dto.NaverBookDto;
 import com.platinouss.bookrecommend.naver.NaverClient;
 import com.platinouss.bookrecommend.naver.dto.SearchBookReq;
 import com.platinouss.bookrecommend.naver.dto.SearchBookRes;
@@ -18,9 +17,9 @@ import java.util.List;
 public class SearchBookService {
     private final NaverClient naverClient;
 
-    public List<BookDto> search(String query) throws IOException {
+    public List<NaverBookDto> search(String query) throws IOException {
         SearchBookReq searchBookReq = new SearchBookReq();
-        List<BookDto> books = new ArrayList<>();
+        List<NaverBookDto> books = new ArrayList<>();
         try {
             searchBookReq.setQuery(query);
             SearchBookRes searchBookRes = naverClient.bookSearch(searchBookReq);
@@ -29,7 +28,7 @@ public class SearchBookService {
                 MyCrawler myCrawler = new MyCrawler();
 
                 for (SearchBookRes.SearchBookItem bookItem : searchBookRes.getItems()) {
-                    BookDto book = BookDto.builder()
+                    NaverBookDto book = NaverBookDto.builder()
                             .title(bookItem.getTitle())
                             .category(myCrawler.categoryCrawler(bookItem.getLink()))
                             .author(bookItem.getAuthor())

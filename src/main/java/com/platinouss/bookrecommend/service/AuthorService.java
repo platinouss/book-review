@@ -30,7 +30,8 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public Optional<Author> find(Long id) {
-        return authorRepository.findAuthorById(id);
+    public Author find(Long id) {
+        return authorRepository.findAuthorById(id)
+                .orElseThrow(RuntimeException::new);
     }
 }

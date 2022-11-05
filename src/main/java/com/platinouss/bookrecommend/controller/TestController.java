@@ -1,9 +1,7 @@
 package com.platinouss.bookrecommend.controller;
 
-import com.platinouss.bookrecommend.domain.Book;
-import com.platinouss.bookrecommend.domain.Review;
 import com.platinouss.bookrecommend.domain.User;
-import com.platinouss.bookrecommend.dto.BookDto;
+import com.platinouss.bookrecommend.naver.dto.NaverBookDto;
 import com.platinouss.bookrecommend.service.BookService;
 import com.platinouss.bookrecommend.service.ReviewService;
 import com.platinouss.bookrecommend.service.UserService;
@@ -28,7 +26,7 @@ public class TestController {
     }
 
     @PostMapping("/book/add")
-    public void addBook(@RequestBody BookDto book) {
+    public void addBook(@RequestBody NaverBookDto book) {
         bookService.add(book);
     }
 }

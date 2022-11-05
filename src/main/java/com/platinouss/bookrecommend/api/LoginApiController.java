@@ -1,19 +1,17 @@
-package com.platinouss.bookrecommend.controller;
+package com.platinouss.bookrecommend.api;
 
 import com.platinouss.bookrecommend.domain.User;
 import com.platinouss.bookrecommend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
-public class LoginController {
+public class LoginApiController {
 
     private final UserService userService;
 

@@ -4,14 +4,9 @@ import com.platinouss.bookrecommend.domain.Author;
 import com.platinouss.bookrecommend.domain.Book;
 import com.platinouss.bookrecommend.domain.BookAndAuthor;
 import com.platinouss.bookrecommend.domain.Publisher;
-import com.platinouss.bookrecommend.dto.BookDto;
-import com.platinouss.bookrecommend.repository.AuthorRepository;
-import com.platinouss.bookrecommend.repository.BookAndAuthorRepository;
+import com.platinouss.bookrecommend.naver.dto.NaverBookDto;
 import com.platinouss.bookrecommend.repository.BookRepository;
-import com.platinouss.bookrecommend.repository.PublisherRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +24,7 @@ public class BookService {
     private final AuthorService authorService;
     private final BookAndAuthorService bookAndAuthorService;
 
-    public Book add(BookDto bookDto) {
+    public Book add(NaverBookDto bookDto) {
         if(bookRepository.findBookByIsbn(bookDto.getIsbn()).isPresent()) {
             return bookRepository.findBookByIsbn(bookDto.getIsbn()).get();
         }
