@@ -1,5 +1,5 @@
 # :blue_book: book review 프로젝트
-책 검색, 소개 및 독자들의 리뷰 등을 제공하는 book review 웹 애플리케이션
+책 검색과 소개, 독자들의 리뷰 등을 제공하는 book review 웹 애플리케이션
 
 <br/>
 
@@ -42,10 +42,12 @@ ___
 #### 2. Spring Data JPA
 * DB 테이블 구조가 1:1, 1:N, N:M의 연관관계를 모두 포함하도록 설계 (ERD 작성)
 * 네이버 책 검색 API를 사용하여 책 정보를 받아오고, 받아온 정보는 DB에 저장하는 방식으로 구현 (책의 카테고리 값은 네이버 API에서 제공하지 않아 크롤링 하는 것으로 대체)
-* 필요한 비즈니스 로직들을 구현
+* JPA 성능 개선을 위해, fetch join을 통한 조회 및 default_batch_fetch_size 설정
 #### 3. Spring Security
 * AuthenticationFilter, AuthenticationProvider 등을 custom 하여 인증 로직 구현
-* JWT로 인증 구현 (진행 중)
+* JWT로 인증 구현
+#### 4. Redis
+* Refresh Token을 Redis에 저장 후, 유효기간이 지난 Access Token을 갱신하는 로직 구현 (진행 중)
 
 <br/>
 
