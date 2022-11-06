@@ -16,13 +16,15 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             " left join fetch b.publisher")
     List<Book> findAll();
 
-    Optional<Book> findByName(String name);
+    @Query("select b from Book b" +
+            " left join fetch b.bookReviewInfo br" +
+            " left join fetch b.publisher p" +
+            " where b.name = :name")
+    Optional<Book> findByName(@Param("name") String name);
 
     @Query("select b from Book b" +
             " left join fetch b.bookReviewInfo br" +
             " left join fetch b.publisher p" +
             " where b.id = :id")
     Optional<Book> findById(@Param("id") Long id);
-
-    Optional<Book> findBookByIsbn(long isbn);
 }
