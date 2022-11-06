@@ -1,5 +1,5 @@
 # :blue_book: book review 프로젝트
-책 검색과 소개, 독자들의 리뷰 등을 제공하는 book review 웹 애플리케이션
+책 검색과 소개, 독자들의 리뷰 등을 제공하는 book review 웹 애플리케이션 구현 프로젝트
 
 <br/>
 
@@ -26,7 +26,7 @@ ___
 * MySQL
 * Spring Data JPA 2.7.2
 * Spring Security 5.7.2
-* Redis (예정)
+* Redis
 * Spring Cloud (예정)
 * Apache Kafka (예정)
 
@@ -45,7 +45,7 @@ ___
 * JPA 성능 개선을 위해, fetch join을 통한 조회 및 default_batch_fetch_size 설정
 #### 3. Spring Security
 * AuthenticationFilter, AuthenticationProvider 등을 custom 하여 인증 로직 구현
-* JWT로 인증 구현
+* JWT를 통한 전반적인 인증 구현
 #### 4. Redis
 * Refresh Token을 Redis에 저장 후, 유효기간이 지난 Access Token을 갱신하는 로직 구현 (진행 중)
 
