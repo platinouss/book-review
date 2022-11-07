@@ -38,7 +38,7 @@ public class Book extends BaseEntity {
     @JoinColumn(name = "bood_review_info_id")
     private BookReviewInfo bookReviewInfo;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -49,7 +49,7 @@ public class UserServiceTest {
         );
 
         userRepository.findUserByName(user.getName()).ifPresent(
-                u -> assertEquals("ROLE_MANAGER", u.getAuthorities().get(0).toString())
+                u -> assertEquals("ROLE_MANAGER", u.getAuthorities().get(0).getAuthority())
         );
     }
 }

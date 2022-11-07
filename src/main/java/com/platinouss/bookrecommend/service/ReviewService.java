@@ -25,9 +25,9 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public Review add(Long book_id, String username, Review review) {
+    public Review add(Long book_id, String email, Review review) {
         Book book = bookService.find(book_id);
-        User user = userService.find(username);
+        User user = userService.find(email);
 
         review.setUser(user);
         review.setBook(book);

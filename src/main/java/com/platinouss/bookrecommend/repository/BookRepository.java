@@ -27,4 +27,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             " left join fetch b.publisher p" +
             " where b.id = :id")
     Optional<Book> findById(@Param("id") Long id);
+
+    Optional<Book> findBookByIsbn(Long isbn);
 }

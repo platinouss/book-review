@@ -48,8 +48,9 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public Optional<Book> find(String name) {
-        return bookRepository.findByName(name);
+    public Book find(String name) {
+        return bookRepository.findByName(name)
+                .orElseThrow(RuntimeException::new);
     }
 
     public Book find(Long id) {
