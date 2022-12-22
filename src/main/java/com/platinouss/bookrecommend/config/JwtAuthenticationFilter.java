@@ -1,12 +1,17 @@
 package com.platinouss.bookrecommend.config;
 
-import com.platinouss.bookrecommend.service.UserService;
+import com.platinouss.bookrecommend.model.CustomUserDetails;
+import com.platinouss.bookrecommend.service.JpaUserDetailsService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,46 +27,69 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Value("${spring.jwt.sign}")
-    private String sign;
-    private final UserService userService;
+    private static final long MINUTE = 60 * 1000L;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * MINUTE;
+
+    @Value("${spring.jwt.sign.access}")
+    private String accessSign;
+
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final JpaUserDetailsService jpaUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = "";
-        for(Cookie cookie : request.getCookies()) {
-            if(cookie.getName().equals("access_token")) {
-                jwt = cookie.getValue();
-                log.info(jwt);
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        SecretKey accessKey = Keys.hmacShaKeyFor(accessSign.getBytes(StandardCharsets.UTF_8));
+        String jwt = request.getHeader("Authorization");
+        String email = getEmailByJwt(jwt);
+
+        Claims claims = null;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(accessKey)
+                    .build()
+                    .parseClaimsJws(jwt)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            String uuid = null;
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("refresh_token")) {
+                    uuid = cookie.getValue();
+                }
+            }
+            if (uuid == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+            if (!refreshJwtToken(jwt, accessKey, uuid, response)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 
-        SecretKey key = Keys.hmacShaKeyFor(sign.getBytes(StandardCharsets.UTF_8));
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jwt)
-                .getBody();
+        CustomUserDetails userDetails = jpaUserDetailsService.loadUserByUsername(email);
 
-        String email = String.valueOf(claims.get("email"));
-        log.info(email);
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("USER");
+            var auth = new UsernamePasswordAuthenticationToken(userDetails, null, List.of(grantedAuthority));
 
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("USER");
-        var auth = new UsernamePasswordAuthenticationToken(email, null, List.of(grantedAuthority));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         List<String> paths = List.of("/api/login", "/api/register");
         for (String path : paths) {
             if(request.getServletPath().equals(path)) {
@@ -69,5 +97,57 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         return false;
+//        return true;
+    }
+
+    private boolean refreshJwtToken(String jwt, SecretKey key, String uuid, HttpServletResponse response) {
+        String email = getEmailByJwt(jwt);
+        String refreshJwt = makeJwtToken(email, key, ACCESS_TOKEN_EXPIRE_TIME);
+
+        if (redisTemplate.opsForValue().setIfAbsent(email, uuid)) {
+            removeAllRefreshToken(email);
+            return false;
+        }
+
+        redisTemplate.opsForSet().remove("email", uuid);
+        String refreshUuid = UUID.randomUUID().toString();
+
+        response.setHeader("Authorization", refreshJwt);
+        response.setHeader("Set-Cookie", makeCookie("refresh_token", refreshUuid));
+        return true;
+    }
+
+    private void removeAllRefreshToken(String email) {
+        redisTemplate.opsForSet().remove(email);
+    }
+
+    private String makeCookie(String tokenName, String tokenValue) {
+        ResponseCookie cookie = ResponseCookie.from(tokenName, tokenValue)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .domain("localhost")
+                .build();
+        return cookie.toString();
+    }
+
+    private String makeJwtToken(String email, SecretKey key, Long time) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(Map.of("email", email))
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + time))
+                .signWith(key)
+                .compact();
+    }
+
+    private String getEmailByJwt(String jwt) {
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String[] splitData = jwt.split("\\.");
+        String claims = new String(decoder.decode(splitData[1]));
+
+        return new JSONObject(claims).get("email").toString();
     }
 }

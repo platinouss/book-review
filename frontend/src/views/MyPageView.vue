@@ -11,8 +11,13 @@ export default {
   name: 'MyPageView',
   computed: {
     isAuthenticated () {
-      axios
-        .get('api/mypage')
+      axios.get('api/mypage',
+        {
+          headers: {
+            Authorization: localStorage.getItem('access_token')
+          }
+        }
+      )
       return true
     }
   }

@@ -35,19 +35,18 @@ export default {
   methods: {
     async login () {
       try {
-        const result = await axios.post('/api/login', {
+        await axios.post('/api/login', {
           email: this.loginForm.email,
           password: this.loginForm.password
-        })
-        if (result.status === 200) {
-          this.$store.commit('loginSuccess')
+        }).then(response => {
+          localStorage.setItem('access_token', response.data.access_token)
           alert('로그인 성공')
+          this.$store.commit('loginSuccess')
           this.$router.push('/')
-        }
+        })
       } catch (error) {
         this.loginError = true
         alert('로그인 실패')
-        throw new Error(error)
       }
     }
   }
