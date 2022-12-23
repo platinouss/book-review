@@ -39,7 +39,7 @@ export default {
           email: this.loginForm.email,
           password: this.loginForm.password
         }).then(response => {
-          localStorage.setItem('access_token', response.data.access_token)
+          localStorage.setItem('access_token', response.data)
           alert('로그인 성공')
           this.$store.commit('loginSuccess')
           this.$router.push('/')

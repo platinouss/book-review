@@ -17,11 +17,20 @@ export default {
     }
   },
   methods: {
-    logout () {
-      axios.get('/api/logout')
-      this.$store.commit('logout')
-      alert('로그아웃 되었습니다.')
-      this.$router.push('/')
+    async logout () {
+      try {
+        await axios.post('api/logout', '', {
+          headers: {
+            Authorization: localStorage.getItem('access_token')
+          }
+        })
+        localStorage.removeItem('access_token')
+        this.$store.commit('logout')
+        alert('로그아웃 되었습니다.')
+        this.$router.push('/')
+      } catch (error) {
+        alert('로그아웃 실패 !')
+      }
     }
   }
 }

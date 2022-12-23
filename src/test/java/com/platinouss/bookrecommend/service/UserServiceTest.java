@@ -33,7 +33,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("1. 사용자 추가 후 MANAGER 권환 확인")
+    @DisplayName("1. 사용자 추가 후 USER 권환 확인")
     void test1() {
          User user = User.builder()
                  .name("platinouss")
@@ -41,15 +41,13 @@ public class UserServiceTest {
                  .email("platinouss@gmail.com")
                  .gender(Gender.MALE)
                  .build();
-
         userService.addUser(user);
 
         userRepository.findUserByName(user.getName()).ifPresent(
                 u -> assertEquals("platinouss@gmail.com", u.getEmail())
         );
-
         userRepository.findUserByName(user.getName()).ifPresent(
-                u -> assertEquals("ROLE_MANAGER", u.getAuthorities().get(0).getAuthority())
+                u -> assertEquals("ROLE_USER", u.getAuthorities().get(0).getAuthority())
         );
     }
 }

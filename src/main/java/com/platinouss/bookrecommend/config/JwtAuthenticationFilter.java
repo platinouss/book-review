@@ -47,12 +47,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        SecretKey accessKey = Keys.hmacShaKeyFor(accessSign.getBytes(StandardCharsets.UTF_8));
         String jwt = request.getHeader("Authorization");
-        String email = getEmailByJwt(jwt);
-
+        if (jwt == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         Claims claims = null;
+        String email = getEmailByJwt(jwt, response);
+        SecretKey accessKey = Keys.hmacShaKeyFor(accessSign.getBytes(StandardCharsets.UTF_8));
         try {
             claims = Jwts.parserBuilder()
                     .setSigningKey(accessKey)
@@ -70,48 +72,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-            if (!refreshJwtToken(jwt, accessKey, uuid, response)) {
+            if (!renewToken(jwt, accessKey, uuid, response)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
         }
-
         CustomUserDetails userDetails = jpaUserDetailsService.loadUserByUsername(email);
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("USER");
             var auth = new UsernamePasswordAuthenticationToken(userDetails, null, List.of(grantedAuthority));
-
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        List<String> paths = List.of("/api/login", "/api/register");
-        for (String path : paths) {
-            if(request.getServletPath().equals(path)) {
-                return true;
-            }
-        }
-        return false;
-//        return true;
-    }
-
-    private boolean refreshJwtToken(String jwt, SecretKey key, String uuid, HttpServletResponse response) {
-        String email = getEmailByJwt(jwt);
+    private boolean renewToken(String jwt, SecretKey key, String uuid, HttpServletResponse response) throws IOException {
+        String email = getEmailByJwt(jwt, response);
         String refreshJwt = makeJwtToken(email, key, ACCESS_TOKEN_EXPIRE_TIME);
-
         if (redisTemplate.opsForValue().setIfAbsent(email, uuid)) {
             removeAllRefreshToken(email);
             return false;
         }
+        redisTemplate.opsForSet().remove(email, uuid);
 
-        redisTemplate.opsForSet().remove("email", uuid);
         String refreshUuid = UUID.randomUUID().toString();
-
+        redisTemplate.opsForSet().add(email, refreshUuid);
         response.setHeader("Authorization", refreshJwt);
         response.setHeader("Set-Cookie", makeCookie("refresh_token", refreshUuid));
         return true;
@@ -142,12 +128,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .compact();
     }
 
-    private String getEmailByJwt(String jwt) {
+    private String getEmailByJwt(String jwt, HttpServletResponse response) throws IOException {
         Base64.Decoder decoder = Base64.getUrlDecoder();
-
-        String[] splitData = jwt.split("\\.");
-        String claims = new String(decoder.decode(splitData[1]));
-
-        return new JSONObject(claims).get("email").toString();
+        try {
+            String[] splitData = jwt.split("\\.");
+            String claims = new String(decoder.decode(splitData[1]));
+            return new JSONObject(claims).get("email").toString();
+        } catch (NullPointerException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
     }
 }
