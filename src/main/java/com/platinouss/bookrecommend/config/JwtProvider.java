@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -32,7 +33,9 @@ public class JwtProvider {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static final long MINUTE = 60 * 1000L;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * MINUTE;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = MINUTE * 30;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = MINUTE * 60 * 24 * 3;
+
 
     @Value("${spring.jwt.sign.access}")
     private String accessSign;
@@ -41,8 +44,10 @@ public class JwtProvider {
         SecretKey accessKey = Keys.hmacShaKeyFor(accessSign.getBytes(StandardCharsets.UTF_8));
         String accessToken = makeJwtToken(authentication.getName(), accessKey, ACCESS_TOKEN_EXPIRE_TIME);
 
+        String email = authentication.getName();
         String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForSet().add(authentication.getName(), uuid);
+        redisTemplate.opsForSet().add(email, uuid);
+        redisTemplate.expire(email, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -60,7 +65,6 @@ public class JwtProvider {
                 uuid = cookie.getValue();
             }
         }
-        log.info(jwt);
         SecretKey accessKey = Keys.hmacShaKeyFor(accessSign.getBytes(StandardCharsets.UTF_8));
         try {
             Claims claims = Jwts.parserBuilder().setSigningKey(accessKey)

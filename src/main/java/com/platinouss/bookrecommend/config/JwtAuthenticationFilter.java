@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -35,7 +36,8 @@ import java.util.*;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final long MINUTE = 60 * 1000L;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * MINUTE;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = MINUTE * 30;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = MINUTE * 60 * 24 * 3;
 
     @Value("${spring.jwt.sign.access}")
     private String accessSign;
@@ -90,21 +92,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean renewToken(String jwt, SecretKey key, String uuid, HttpServletResponse response) throws IOException {
         String email = getEmailByJwt(jwt, response);
         String refreshJwt = makeJwtToken(email, key, ACCESS_TOKEN_EXPIRE_TIME);
-        if (redisTemplate.opsForValue().setIfAbsent(email, uuid)) {
-            removeAllRefreshToken(email);
+        if (redisTemplate.opsForSet().remove(email, uuid) == 0L) {
+            redisTemplate.delete(email);
             return false;
         }
-        redisTemplate.opsForSet().remove(email, uuid);
-
         String refreshUuid = UUID.randomUUID().toString();
         redisTemplate.opsForSet().add(email, refreshUuid);
+        redisTemplate.expire(email, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
         response.setHeader("Authorization", refreshJwt);
         response.setHeader("Set-Cookie", makeCookie("refresh_token", refreshUuid));
         return true;
-    }
-
-    private void removeAllRefreshToken(String email) {
-        redisTemplate.opsForSet().remove(email);
     }
 
     private String makeCookie(String tokenName, String tokenValue) {

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isAuthenticated" class="app">
+  <div class="app">
     마이페이지
   </div>
 </template>
@@ -9,17 +9,30 @@ import axios from 'axios'
 
 export default {
   name: 'MyPageView',
-  computed: {
-    isAuthenticated () {
-      axios.get('api/mypage',
+  data () {
+    return {
+      subject: ''
+    }
+  },
+  mounted () {
+    this.getMyPage()
+  },
+  methods: {
+    getMyPage () {
+      axios.get('/api/mypage',
         {
           headers: {
             Authorization: localStorage.getItem('access_token')
           }
         }
-      )
-      return true
+      ).then(response => {
+        const newAccessToken = response.headers.authorization
+        if (newAccessToken != null) {
+          localStorage.setItem('access_token', newAccessToken)
+        }
+      })
     }
   }
+
 }
 </script>
