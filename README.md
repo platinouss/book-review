@@ -17,7 +17,7 @@ ___
 
 <br/>
 
-### :paperclip: 사용할 주요 기술 스택 (고도화 진행하면서 수정되거나 추가될 예정)
+### :paperclip: 사용한 주요 기술 스택
 ___
 #### Front-end
 * Vue 2.6.14
@@ -27,12 +27,10 @@ ___
 * Spring Data JPA 2.7.2
 * Spring Security 5.7.2
 * Redis
-* Spring Cloud (예정)
-* Apache Kafka (예정)
 
 <br/>
 
-### :bookmark: 현재까지의 Back-End 진행 과정 (틈틈이 추가될 예정)
+### :bookmark: 현재까지의 진행 과정
 ___
 #### 0. 공통
 * Unit Test 작성
@@ -45,9 +43,9 @@ ___
 * JPA 성능 개선을 위해, fetch join을 통한 조회 및 default_batch_fetch_size 설정
 #### 3. Spring Security
 * AuthenticationFilter, AuthenticationProvider 등을 custom 하여 인증 로직 구현
-* JWT를 통한 전반적인 인증 구현
+* JWT 기반 사용자 인증 구현
 #### 4. Redis
-* Refresh Token을 Redis에 저장 후, 유효기간이 지난 Access Token을 갱신하는 로직 구현 (진행 중)
+* Access Token이 갱신될 때, 해당 Refresh Token 또한 갱신되도록 구현
 
 <br/>
 
